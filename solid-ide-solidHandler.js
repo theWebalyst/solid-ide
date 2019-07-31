@@ -77,7 +77,7 @@ this.checkPerms = async function(url,agent,session){
     if(!agent || !url)
         /* No harm in this, the interface will show a message if the
         ** user doesn't actually have read perms
-        */ 
+        */
         return { Read:true, Write:false, Control:false  }
     if(!self.storage){
         var path = agent.replace(/^https:\/\/[^/]*\//,'')
@@ -94,11 +94,13 @@ this.checkStatus = async function(url){
    var storage  = (sess) ? sess.storage : ""
    var loggedIn = (sess) ? true : false
    var perms = await self.checkPerms(url,webId)
-   return { 
+   // TODO for SAFE assume permissions and let UI handle errors:
+   perms = { Read:true, Write:true, Control:true  }
+   return {
                 webId:webId,
                 storage:storage,
                 loggedIn:loggedIn,
-                permissions:perms 
+                permissions:perms
           }
 }
 /* INTERNAL FUNCTIONS
@@ -125,13 +127,14 @@ this.urlFromQueryString = function(){
     }
     else {
         thing = {
-             url : "https://solside.solid.community/public/samples/",
+             // url : "https://solside.solid.community/public/samples/",
+             url : "safe://solid-ide/samples/",
             type : "folder"
         }
     }
     return thing
 }
-this.parseQstring = function() {            
+this.parseQstring = function() {
     var pairs = location.search.slice(1).split('&');
     var result = {};
     pairs.forEach(function(pair) {
@@ -142,5 +145,5 @@ this.parseQstring = function() {
 }
 return this
 }
-if (typeof(module)!="undefined" )  module.exports = solidAuthSimple()
+// if (typeof(module)!="undefined" )  module.exports = solidAuthSimple()
 /* END */
