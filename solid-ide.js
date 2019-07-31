@@ -11,20 +11,29 @@ var init = function(){
     })
 }
 
+// Provide app info if hosted on SAFE Network
+if (fc.setSafeAppInfo !== undefined) {
+    fc.setSafeAppInfo({
+      id: 'https://github.com/theWebalyst/solid-ide',
+      name: 'Solid IDE',
+      vendor: '@jeff-zucker'
+    })
+}
+
 var app = new Vue({
     el: '#app',
     methods : {
 //
 // COMMUNICATE WITH THE SOLID SERVER
 //
-        get : function(thing){ 
+        get : function(thing){
             var oldThing = this.currentThing
             this.currentThing = thing
             view.hide();
             sol.get(thing).then( results => {
                  if(sol.err){
                      alert(sol.err)
-                     if(oldThing.url===thing.url) 
+                     if(oldThing.url===thing.url)
                          oldThing.url = sol.homeUrl;
                      view.refresh(oldThing.url)
                  }
@@ -50,7 +59,7 @@ var app = new Vue({
             view.hide('folderManager')
         	var inputFile = document.getElementById("upFile")
 			for (var i = 0; i < inputFile.files.length; i++) {
-				var content = inputFile.files[i] 
+				var content = inputFile.files[i]
         		var url  = this.folder.url+content.name;
         		success = await sol.replace(url,content )
         		if(success){
@@ -59,7 +68,7 @@ var app = new Vue({
         		else alert("Couldn't create "+url+" "+sol.err)
 			}
             view.refresh(this.folder.url)
-        },        	
+        },
         addThing : function(type){
             if(!this.newThing.name){
                alert("You didn't supply a name!")
@@ -87,7 +96,7 @@ var app = new Vue({
                 view.show('fileManager');
             }
         },
-        getProfile : function(){ 
+        getProfile : function(){
             var url =  this.webId.replace('#me','')
             view.refresh( url )
         },
@@ -123,7 +132,7 @@ var app = new Vue({
                        view.refresh(sol.homeUrl)
                    })
                }
-               else { 
+               else {
                    this.logState = "logout"
                    sol.homeUrl = this.homeUrl
                    fc.logout().then( ()=> {
@@ -190,19 +199,19 @@ var app = new Vue({
             if(key.match("folder")){
                 app.folder = val
                 app.currentThing = val
-                if(sol.qname) { 
+                if(sol.qname) {
                     app.currentThing = sol.qname
-                    sol.get(sol.qname).then( results => { 
+                    sol.get(sol.qname).then( results => {
                         if(!results) alert(sol.err)
                         app.processResults(results)
                     })
                 }
-                else if(sol.hasIndexHtml) { 
+                else if(sol.hasIndexHtml) {
                    app.currentThing = {
                        url : val.url + "index.html",
                       type : "text/html"
                     }
-                    sol.get(app.currentThing).then( results => { 
+                    sol.get(app.currentThing).then( results => {
                         if( !results ) alert(sol.err)
                         app.processResults(results)
                     })
@@ -211,11 +220,11 @@ var app = new Vue({
             if( val.type.match(/(image|audio|video)/)  ){
                 val.content=""
             }
-            fileDisplay.setContent(val.content) 
+            fileDisplay.setContent(val.content)
             fileDisplay.file.srcUrl = app.currentThing.url
             sol.checkStatus(val.url).then( status => {
                 var url = location.href.replace(/^[^\?]*\?/,'')
-                var url2 = location.href.replace(url,'').replace(/\?$/,'')  
+                var url2 = location.href.replace(url,'').replace(/\?$/,'')
                 if(url2) {
                     url2 = url2  + "?url="+encodeURI(val.url)
                 }
@@ -226,7 +235,7 @@ var app = new Vue({
         }, /* process results */
 
     }, /* methods */
-    data: { 
+    data: {
         fontSize     : "medium",
         editKeys     : "emacs",
         editTheme    : "dark theme",
@@ -277,7 +286,7 @@ var app = new Vue({
                 this.initEditor()
                 this.file = app.currentThing;
                 this.file.content = content;
-                if(!this.file.type && this.file.url) 
+                if(!this.file.type && this.file.url)
                     this.file.type = sol.guessFileType(this.file.url)
                 this.zed.setModeFromType(this.file.type)
                 this.zed.setContents(content)
@@ -302,7 +311,7 @@ var app = new Vue({
                 return;
                 }
                 if(this.displayState==='dataOnly'){
-                   this.displayState="both"; 
+                   this.displayState="both";
                    this.initEditor()
                    return;
                 }
@@ -320,16 +329,16 @@ var app = new Vue({
        show : function(area){
             this.currentForm = this.currentForm || area;
             var x = document.getElementById(this.currentForm)
-            document.getElementById(this.currentForm).style.display = 'none'; 
+            document.getElementById(this.currentForm).style.display = 'none';
             this.currentForm = area;
-            document.getElementById(area).style.display = 'block'; 
-            document.getElementById('fileDisplay').style.display = 'none'; 
+            document.getElementById(area).style.display = 'block';
+            document.getElementById('fileDisplay').style.display = 'none';
         },
         hide : function(area){
-            document.getElementById('fileDisplay').style.display = 'block'; 
+            document.getElementById('fileDisplay').style.display = 'block';
             area = area || this.currentForm;
             if(area)
-                document.getElementById(area).style.display = 'none'; 
+                document.getElementById(area).style.display = 'none';
         },
         refresh : function(url) {
               var url = url || app.currentThing.url
@@ -350,7 +359,7 @@ var app = new Vue({
             if(status.loggedIn) {
                 optionsButton.style.backgroundColor = "rgba(145,200,220,2)";
                 profileButton.style.display="inline-block"
-                if( status.permissions.Write 
+                if( status.permissions.Write
                  && !type.match(/(image|audio|video|folder)/)
                 ){
                     saveButton.style.display = 'table-cell'
@@ -362,4 +371,3 @@ var app = new Vue({
     }
 
     init()
-
