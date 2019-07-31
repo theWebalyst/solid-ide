@@ -3,14 +3,22 @@
 </title>
 <!--
   libraries from remote CDN
-      rdflib,solid-auth-client,solid-file-client,vue,ace 
-  local files 
+      rdflib,solid-auth-client,solid-file-client,vue,ace
+  local files
       solside, zeditor
--->
-<script src="https://cdn.jsdelivr.net/npm/solid-file-client@0.5.1/dist/browser/solid-file-client.bundle.js"></script>
 
+<script src="https://cdn.jsdelivr.net/npm/solid-file-client@0.5.1/dist/browser/solid-file-client.bundle.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.1/ace.js"></script>
+
+For SAFE Network host the above'cdn' stuff locally for now. Later can share
+with other apps:
+-->
+<script src="./libs/solid-file-client.bundle.js"></script>
+<script src="./libs/vue.min.js"></script>
+<script src="safe://ace-1-4-5-src-min/ace.js"></script>
+<!-- <script src="./libs/ace-1-4-5-src-min/ace.js"></script> -->
+
 <script src="./solid-ide-solidHandler.js"></script>
 <script src="./solid-ide-editor.js"></script>
 <link rel="stylesheet" href="./assets/main.css">
@@ -71,8 +79,8 @@
 
 <div id="fileManager" class="formArea">
     <div class="cancel-icon">
-        <button v-on:click="view.hide('fileManager')" 
-           class="xIcon" title="Cancel"> X 
+        <button v-on:click="view.hide('fileManager')"
+           class="xIcon" title="Cancel"> X
         </button>
     </div>
     <div>File : <em>{{file.url}}</em></div>
@@ -99,7 +107,7 @@
 
 <div id="folderManager" class="formArea">
     <div class="cancel-icon">
-        <button v-on:click="view.hide('folderManager')" 
+        <button v-on:click="view.hide('folderManager')"
          class="xIcon" title="Cancel"> X </button>
     </div>
     <div>Folder : <em>{{folder.url}}</em></div>
@@ -119,8 +127,8 @@
 
 <div id="optionsManager" class="formArea">
     <div class="cancel-icon">
-        <button v-on:click="view.hide('optionsManager')" 
-           class="xIcon" title="Cancel"> X 
+        <button v-on:click="view.hide('optionsManager')"
+           class="xIcon" title="Cancel"> X
         </button>
     </div>
 
